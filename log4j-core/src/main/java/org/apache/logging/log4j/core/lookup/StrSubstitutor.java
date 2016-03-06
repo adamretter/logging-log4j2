@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.util.Strings;
 
 /**
@@ -327,12 +328,13 @@ public class StrSubstitutor {
      * Replaces all the occurrences of variables in the given source object with
      * their matching values from the map.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the source text containing the variables to substitute, null returns null
      * @param valueMap  the map with the values, may be null
      * @return the result of the replace operation
      */
-    public static String replace(final Object source, final Map<String, String> valueMap) {
-        return new StrSubstitutor(valueMap).replace(source);
+    public static String replace(final Configuration config, final Object source, final Map<String, String> valueMap) {
+        return new StrSubstitutor(valueMap).replace(config, source);
     }
 
     /**
@@ -340,6 +342,7 @@ public class StrSubstitutor {
      * their matching values from the map. This method allows to specify a
      * custom variable prefix and suffix
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the source text containing the variables to substitute, null returns null
      * @param valueMap  the map with the values, may be null
      * @param prefix  the prefix of variables, not null
@@ -347,20 +350,21 @@ public class StrSubstitutor {
      * @return the result of the replace operation
      * @throws IllegalArgumentException if the prefix or suffix is null
      */
-    public static String replace(final Object source, final Map<String, String> valueMap, final String prefix,
+    public static String replace(final Configuration config, final Object source, final Map<String, String> valueMap, final String prefix,
                                  final String suffix) {
-        return new StrSubstitutor(valueMap, prefix, suffix).replace(source);
+        return new StrSubstitutor(valueMap, prefix, suffix).replace(config, source);
     }
 
     /**
      * Replaces all the occurrences of variables in the given source object with their matching
      * values from the properties.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source the source text containing the variables to substitute, null returns null
      * @param valueProperties the properties with values, may be null
      * @return the result of the replace operation
      */
-    public static String replace(final Object source, final Properties valueProperties) {
+    public static String replace(final Configuration config, final Object source, final Properties valueProperties) {
         if (valueProperties == null) {
             return source.toString();
         }
@@ -371,7 +375,7 @@ public class StrSubstitutor {
             final String propValue = valueProperties.getProperty(propName);
             valueMap.put(propName, propValue);
         }
-        return StrSubstitutor.replace(source, valueMap);
+        return StrSubstitutor.replace(config, source, valueMap);
     }
 
     //-----------------------------------------------------------------------
@@ -379,27 +383,29 @@ public class StrSubstitutor {
      * Replaces all the occurrences of variables with their matching values
      * from the resolver using the given source string as a template.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the string to replace in, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final String source) {
-        return replace(null, source);
+    public String replace(final Configuration config, final String source) {
+        return replace(null, null, source);
     }
     //-----------------------------------------------------------------------
     /**
      * Replaces all the occurrences of variables with their matching values
      * from the resolver using the given source string as a template.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent if there is one.
      * @param source  the string to replace in, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final String source) {
+    public String replace(final Configuration  config, final LogEvent event, final String source) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(source);
-        if (!substitute(event, buf, 0, source.length())) {
+        if (!substitute(config, event, buf, 0, source.length())) {
             return source;
         }
         return buf.toString();
@@ -413,13 +419,14 @@ public class StrSubstitutor {
      * The rest of the string is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the string to replace in, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final String source, final int offset, final int length) {
-        return replace(null, source, offset, length);
+    public String replace(final Configuration config, final String source, final int offset, final int length) {
+        return replace(config, null, source, offset, length);
     }
 
     /**
@@ -430,18 +437,19 @@ public class StrSubstitutor {
      * The rest of the string is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the string to replace in, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final String source, final int offset, final int length) {
+    public String replace(final Configuration config, final LogEvent event, final String source, final int offset, final int length) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
-        if (!substitute(event, buf, 0, length)) {
+        if (!substitute(config, event, buf, 0, length)) {
             return source.substring(offset, offset + length);
         }
         return buf.toString();
@@ -453,11 +461,12 @@ public class StrSubstitutor {
      * from the resolver using the given source array as a template.
      * The array is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the character array to replace in, not altered, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final char[] source) {
-        return replace(null, source);
+    public String replace(final Configuration config, final char[] source) {
+        return replace(config, null, source);
     }
 
     //-----------------------------------------------------------------------
@@ -466,16 +475,17 @@ public class StrSubstitutor {
      * from the resolver using the given source array as a template.
      * The array is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the character array to replace in, not altered, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final char[] source) {
+    public String replace(final Configuration config, final LogEvent event, final char[] source) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(source.length).append(source);
-        substitute(event, buf, 0, source.length);
+        substitute(config, event, buf, 0, source.length);
         return buf.toString();
     }
 
@@ -488,13 +498,14 @@ public class StrSubstitutor {
      * The rest of the array is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the character array to replace in, not altered, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final char[] source, final int offset, final int length) {
-        return replace(null, source, offset, length);
+    public String replace(final Configuration config, final char[] source, final int offset, final int length) {
+        return replace(config, null, source, offset, length);
     }
 
     /**
@@ -506,18 +517,19 @@ public class StrSubstitutor {
      * The rest of the array is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the character array to replace in, not altered, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final char[] source, final int offset, final int length) {
+    public String replace(final Configuration config, final LogEvent event, final char[] source, final int offset, final int length) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
-        substitute(event, buf, 0, length);
+        substitute(config, event, buf, 0, length);
         return buf.toString();
     }
 
@@ -527,11 +539,12 @@ public class StrSubstitutor {
      * from the resolver using the given source buffer as a template.
      * The buffer is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the buffer to use as a template, not changed, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final StringBuffer source) {
-        return replace(null, source);
+    public String replace(final Configuration config, final StringBuffer source) {
+        return replace(config, null, source);
     }
 
     //-----------------------------------------------------------------------
@@ -540,16 +553,17 @@ public class StrSubstitutor {
      * from the resolver using the given source buffer as a template.
      * The buffer is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the buffer to use as a template, not changed, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final StringBuffer source) {
+    public String replace(final Configuration config, final LogEvent event, final StringBuffer source) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(source.length()).append(source);
-        substitute(event, buf, 0, buf.length());
+        substitute(config, event, buf, 0, buf.length());
         return buf.toString();
     }
 
@@ -562,13 +576,14 @@ public class StrSubstitutor {
      * The rest of the buffer is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the buffer to use as a template, not changed, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final StringBuffer source, final int offset, final int length) {
-        return replace(null, source, offset, length);
+    public String replace(final Configuration config, final StringBuffer source, final int offset, final int length) {
+        return replace(config, null, source, offset, length);
     }
 
     /**
@@ -580,18 +595,19 @@ public class StrSubstitutor {
      * The rest of the buffer is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the buffer to use as a template, not changed, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final StringBuffer source, final int offset, final int length) {
+    public String replace(final Configuration config, final LogEvent event, final StringBuffer source, final int offset, final int length) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
-        substitute(event, buf, 0, length);
+        substitute(config, event, buf, 0, length);
         return buf.toString();
     }
 
@@ -601,11 +617,12 @@ public class StrSubstitutor {
      * from the resolver using the given source builder as a template.
      * The builder is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the builder to use as a template, not changed, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final StringBuilder source) {
-        return replace(null, source);
+    public String replace(final Configuration config, final StringBuilder source) {
+        return replace(config, null, source);
     }
 
     //-----------------------------------------------------------------------
@@ -614,16 +631,17 @@ public class StrSubstitutor {
      * from the resolver using the given source builder as a template.
      * The builder is not altered by this method.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The LogEvent.
      * @param source  the builder to use as a template, not changed, null returns null.
      * @return the result of the replace operation.
      */
-    public String replace(final LogEvent event, final StringBuilder source) {
+    public String replace(final Configuration config, final LogEvent event, final StringBuilder source) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(source.length()).append(source);
-        substitute(event, buf, 0, buf.length());
+        substitute(config, event, buf, 0, buf.length());
         return buf.toString();
     }
     /**
@@ -635,13 +653,14 @@ public class StrSubstitutor {
      * The rest of the builder is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the builder to use as a template, not changed, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final StringBuilder source, final int offset, final int length) {
-        return replace(null, source, offset, length);
+    public String replace(final Configuration config, final StringBuilder source, final int offset, final int length) {
+        return replace(config, null, source, offset, length);
     }
 
     /**
@@ -653,18 +672,19 @@ public class StrSubstitutor {
      * The rest of the builder is not processed, and is not returned.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the builder to use as a template, not changed, null returns null
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the array to be processed, must be valid
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final StringBuilder source, final int offset, final int length) {
+    public String replace(final Configuration config, final LogEvent event, final StringBuilder source, final int offset, final int length) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
-        substitute(event, buf, 0, length);
+        substitute(config, event, buf, 0, length);
         return buf.toString();
     }
 
@@ -674,11 +694,12 @@ public class StrSubstitutor {
      * their matching values from the resolver. The input source object is
      * converted to a string using <code>toString</code> and is not altered.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the source to replace in, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final Object source) {
-        return replace(null, source);
+    public String replace(final Configuration config, final Object source) {
+        return replace(config, null, source);
     }
     //-----------------------------------------------------------------------
     /**
@@ -686,16 +707,17 @@ public class StrSubstitutor {
      * their matching values from the resolver. The input source object is
      * converted to a string using <code>toString</code> and is not altered.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the source to replace in, null returns null
      * @return the result of the replace operation
      */
-    public String replace(final LogEvent event, final Object source) {
+    public String replace(final Configuration config, final LogEvent event, final Object source) {
         if (source == null) {
             return null;
         }
         final StringBuilder buf = new StringBuilder().append(source);
-        substitute(event, buf, 0, buf.length());
+        substitute(config, event, buf, 0, buf.length());
         return buf.toString();
     }
 
@@ -708,11 +730,11 @@ public class StrSubstitutor {
      * @param source  the buffer to replace in, updated, null returns zero
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuffer source) {
+    public boolean replaceIn(final Configuration config, final StringBuffer source) {
         if (source == null) {
             return false;
         }
-        return replaceIn(source, 0, source.length());
+        return replaceIn(config, source, 0, source.length());
     }
 
     /**
@@ -724,13 +746,14 @@ public class StrSubstitutor {
      * The rest of the buffer is not processed, but it is not deleted.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the buffer to replace in, updated, null returns zero
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the buffer to be processed, must be valid
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuffer source, final int offset, final int length) {
-        return replaceIn(null, source, offset, length);
+    public boolean replaceIn(final Configuration config, final StringBuffer source, final int offset, final int length) {
+        return replaceIn(config, null, source, offset, length);
     }
 
     /**
@@ -742,18 +765,19 @@ public class StrSubstitutor {
      * The rest of the buffer is not processed, but it is not deleted.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the buffer to replace in, updated, null returns zero
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the buffer to be processed, must be valid
      * @return true if altered
      */
-    public boolean replaceIn(final LogEvent event, final StringBuffer source, final int offset, final int length) {
+    public boolean replaceIn(final Configuration config, final LogEvent event, final StringBuffer source, final int offset, final int length) {
         if (source == null) {
             return false;
         }
         final StringBuilder buf = new StringBuilder(length).append(source, offset, length);
-        if (!substitute(event, buf, 0, length)) {
+        if (!substitute(config, event, buf, 0, length)) {
             return false;
         }
         source.replace(offset, offset + length, buf.toString());
@@ -765,11 +789,12 @@ public class StrSubstitutor {
      * Replaces all the occurrences of variables within the given source
      * builder with their matching values from the resolver.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the builder to replace in, updated, null returns zero
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuilder source) {
-        return replaceIn(null, source);
+    public boolean replaceIn(final Configuration config, final StringBuilder source) {
+        return replaceIn(config, null, source);
     }
 
     //-----------------------------------------------------------------------
@@ -777,15 +802,16 @@ public class StrSubstitutor {
      * Replaces all the occurrences of variables within the given source
      * builder with their matching values from the resolver.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event the current LogEvent, if one exists.
      * @param source  the builder to replace in, updated, null returns zero
      * @return true if altered
      */
-    public boolean replaceIn(final LogEvent event, final StringBuilder source) {
+    public boolean replaceIn(final Configuration config, final LogEvent event, final StringBuilder source) {
         if (source == null) {
             return false;
         }
-        return substitute(event, source, 0, source.length());
+        return substitute(config, event, source, 0, source.length());
     }
     /**
      * Replaces all the occurrences of variables within the given source
@@ -795,12 +821,13 @@ public class StrSubstitutor {
      * The rest of the builder is not processed, but it is not deleted.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param source  the builder to replace in, null returns zero
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    public boolean replaceIn(final StringBuilder source, final int offset, final int length) {
+    public boolean replaceIn(final Configuration config, final StringBuilder source, final int offset, final int length) {
         return replaceIn(null, source, offset, length);
     }
 
@@ -812,17 +839,18 @@ public class StrSubstitutor {
      * The rest of the builder is not processed, but it is not deleted.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event   the current LogEvent, if one is present.
      * @param source  the builder to replace in, null returns zero
      * @param offset  the start offset within the array, must be valid
      * @param length  the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    public boolean replaceIn(final LogEvent event, final StringBuilder source, final int offset, final int length) {
+    public boolean replaceIn(final Configuration config, final LogEvent event, final StringBuilder source, final int offset, final int length) {
         if (source == null) {
             return false;
         }
-        return substitute(event, source, offset, length);
+        return substitute(config, event, source, offset, length);
     }
 
     //-----------------------------------------------------------------------
@@ -837,14 +865,15 @@ public class StrSubstitutor {
      * the substitution process at the start or end.
      * </p>
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent, if there is one.
      * @param buf  the string builder to substitute into, not null
      * @param offset  the start offset within the builder, must be valid
      * @param length  the length within the builder to be processed, must be valid
      * @return true if altered
      */
-    protected boolean substitute(final LogEvent event, final StringBuilder buf, final int offset, final int length) {
-        return substitute(event, buf, offset, length, null) > 0;
+    protected boolean substitute(final Configuration config, final LogEvent event, final StringBuilder buf, final int offset, final int length) {
+        return substitute(config, event, buf, offset, length, null) > 0;
     }
 
     /**
@@ -852,6 +881,7 @@ public class StrSubstitutor {
      * interpolation method, which resolves the values of all variable references
      * contained in the passed in text.
      *
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent, if there is one.
      * @param buf  the string builder to substitute into, not null
      * @param offset  the start offset within the builder, must be valid
@@ -860,7 +890,7 @@ public class StrSubstitutor {
      * @return the length change that occurs, unless priorVariables is null when the int
      *  represents a boolean flag as to whether any change occurred.
      */
-    private int substitute(final LogEvent event, final StringBuilder buf, final int offset, final int length,
+    private int substitute(final Configuration config, final LogEvent event, final StringBuilder buf, final int offset, final int length,
                            List<String> priorVariables) {
         final StrMatcher prefixMatcher = getVariablePrefixMatcher();
         final StrMatcher suffixMatcher = getVariableSuffixMatcher();
@@ -916,7 +946,7 @@ public class StrSubstitutor {
                                         - startMatchLen);
                                 if (substitutionInVariablesEnabled) {
                                     final StringBuilder bufName = new StringBuilder(varNameExpr);
-                                    substitute(event, bufName, 0, bufName.length());
+                                    substitute(config, event, bufName, 0, bufName.length());
                                     varNameExpr = bufName.toString();
                                 }
                                 pos += endMatchLen;
@@ -954,7 +984,7 @@ public class StrSubstitutor {
                                 priorVariables.add(varName);
 
                                 // resolve the variable
-                                String varValue = resolveVariable(event, varName, buf,
+                                String varValue = resolveVariable(config, event, varName, buf,
                                         startPos, endPos);
                                 if (varValue == null) {
                                     varValue = varDefaultValue;
@@ -964,7 +994,7 @@ public class StrSubstitutor {
                                     final int varLen = varValue.length();
                                     buf.replace(startPos, endPos, varValue);
                                     altered = true;
-                                    int change = substitute(event, buf, startPos,
+                                    int change = substitute(config, event, buf, startPos,
                                             varLen, priorVariables);
                                     change = change
                                             + (varLen - (endPos - startPos));
@@ -1031,13 +1061,13 @@ public class StrSubstitutor {
      * @param endPos  the end position of the variable including the suffix, valid
      * @return the variable's value or <b>null</b> if the variable is unknown
      */
-    protected String resolveVariable(final LogEvent event, final String variableName, final StringBuilder buf,
+    protected String resolveVariable(final Configuration config, final LogEvent event, final String variableName, final StringBuilder buf,
                                      final int startPos, final int endPos) {
         final StrLookup resolver = getVariableResolver();
         if (resolver == null) {
             return null;
         }
-        return resolver.lookup(event, variableName);
+        return resolver.lookup(config, event, variableName);
     }
 
     // Escape

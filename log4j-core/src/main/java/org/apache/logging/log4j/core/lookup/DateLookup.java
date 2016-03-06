@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.status.StatusLogger;
 
@@ -38,22 +39,24 @@ public class DateLookup implements StrLookup {
 
     /**
      * Looks up the value of the environment variable.
+     * @param config The Configuration for which the lookup is being attempted
      * @param key the format to use. If null, the default DateFormat will be used.
      * @return The value of the environment variable.
      */
     @Override
-    public String lookup(final String key) {
+    public String lookup(final Configuration config, final String key) {
         return formatDate(System.currentTimeMillis(), key);
     }
 
     /**
      * Looks up the value of the environment variable.
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent (is ignored by this StrLookup).
      * @param key the format to use. If null, the default DateFormat will be used.
      * @return The value of the environment variable.
      */
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         return formatDate(event.getTimeMillis(), key);
     }
 

@@ -30,8 +30,8 @@ public class MapLookupTest {
     @Test
     public void testEmptyMap() {
         final MapLookup lookup = new MapLookup(new HashMap<String, String>());
-        assertEquals(null, lookup.lookup(null));
-        assertEquals(null, lookup.lookup("X"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals(null, lookup.lookup(null, "X"));
     }
 
     @Test
@@ -39,15 +39,15 @@ public class MapLookupTest {
         final HashMap<String, String> map = new HashMap<>();
         map.put("A", "B");
         final MapLookup lookup = new MapLookup(map);
-        assertEquals(null, lookup.lookup(null));
-        assertEquals("B", lookup.lookup("A"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals("B", lookup.lookup(null, "A"));
     }
 
     @Test
     public void testNullMap() {
         final MapLookup lookup = new MapLookup();
-        assertEquals(null, lookup.lookup(null));
-        assertEquals(null, lookup.lookup("X"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals(null, lookup.lookup(null, "X"));
     }
 
     @Test
@@ -56,12 +56,12 @@ public class MapLookupTest {
                 "--file",
                 "foo.txt" });
         final MapLookup lookup = MainMapLookup.MAIN_SINGLETON;
-        assertEquals(null, lookup.lookup(null));
-        assertEquals(null, lookup.lookup("X"));
-        assertEquals("--file", lookup.lookup("0"));
-        assertEquals("foo.txt", lookup.lookup("1"));
-        assertEquals("foo.txt", lookup.lookup("--file"));
-        assertEquals(null, lookup.lookup("foo.txt"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals(null, lookup.lookup(null, "X"));
+        assertEquals("--file", lookup.lookup(null, "0"));
+        assertEquals("foo.txt", lookup.lookup(null, "1"));
+        assertEquals("foo.txt", lookup.lookup(null, "--file"));
+        assertEquals(null, lookup.lookup(null, "foo.txt"));
     }
 
 }

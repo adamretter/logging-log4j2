@@ -19,6 +19,7 @@ package org.apache.logging.log4j.core.lookup;
 import java.util.Locale;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.util.Strings;
 
@@ -68,7 +69,7 @@ public class JavaLookup extends AbstractLookup {
     }
 
     private String getSystemProperty(final String name) {
-        return spLookup.lookup(name);
+        return spLookup.lookup((Configuration)null, name);
     }
 
     private String getSystemProperty(final String prefix, final String name) {
@@ -91,6 +92,8 @@ public class JavaLookup extends AbstractLookup {
     /**
      * Looks up the value of the environment variable.
      *
+     * @param config
+     *        The Configuration for which the lookup is being attempted
      * @param event
      *        The current LogEvent (is ignored by this StrLookup).
      * @param key
@@ -98,7 +101,7 @@ public class JavaLookup extends AbstractLookup {
      * @return The value of the environment variable.
      */
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         switch (key) {
         case "version":
             return "Java version " + getSystemProperty("java.version");

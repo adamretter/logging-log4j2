@@ -72,14 +72,14 @@ public class Log4jLookupTest {
     @Test
     public void lookupConfigLocation() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_LOCATION);
+        final String value = log4jLookup.lookup(null, KEY_CONFIG_LOCATION);
         assertEquals(EXPECT.getAbsolutePath(), value);
     }
 
     @Test
     public void lookupConfigParentLocation() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_PARENT_LOCATION);
+        final String value = log4jLookup.lookup(null, KEY_CONFIG_PARENT_LOCATION);
         assertEquals(EXPECT.getParentFile().getAbsolutePath(), value);
     }
 }

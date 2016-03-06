@@ -151,7 +151,7 @@ public final class PatternLayout extends AbstractStringLayout {
 
     private byte[] strSubstitutorReplace(final byte... b) {
         if (b != null && config != null) {
-            return getBytes(config.getStrSubstitutor().replace(new String(b, getCharset())));
+            return getBytes(config.getStrSubstitutor().replace(config, new String(b, getCharset())));
         }
         return b;
     }

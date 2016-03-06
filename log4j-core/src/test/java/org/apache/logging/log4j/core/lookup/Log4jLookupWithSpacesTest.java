@@ -70,7 +70,7 @@ public class Log4jLookupWithSpacesTest {
     @Test
     public void lookupConfigLocation_withSpaces() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_LOCATION);
+        final String value = log4jLookup.lookup(null, KEY_CONFIG_LOCATION);
         assertEquals(
                 new File(System.getProperty("user.home"), "/a a/b b/c c/d d/e e/log4j2 file.xml").getAbsolutePath(),
                 value);
@@ -79,7 +79,7 @@ public class Log4jLookupWithSpacesTest {
     @Test
     public void lookupConfigParentLocation_withSpaces() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_PARENT_LOCATION);
+        final String value = log4jLookup.lookup(null, KEY_CONFIG_PARENT_LOCATION);
         assertEquals(new File(System.getProperty("user.home"), "/a a/b b/c c/d d/e e").getAbsolutePath(), value);
     }
 }

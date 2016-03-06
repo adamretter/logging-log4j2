@@ -348,7 +348,7 @@ public class AsyncLogger extends Logger implements EventTranslatorVararg<RingBuf
      */
     public void actualAsyncLog(final RingBufferLogEvent event) {
         final Map<Property, Boolean> properties = privateConfig.loggerConfig.getProperties();
-        event.mergePropertiesIntoContextMap(properties, privateConfig.config.getStrSubstitutor());
+        event.mergePropertiesIntoContextMap(privateConfig.config, properties, privateConfig.config.getStrSubstitutor());
         final ReliabilityStrategy strategy = privateConfig.loggerConfig.getReliabilityStrategy();
         strategy.log(this, event);
     }

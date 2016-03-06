@@ -19,6 +19,7 @@ package org.apache.logging.log4j.core.lookup;
 import java.util.Map;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 
 /**
@@ -79,12 +80,12 @@ public class MainMapLookup extends MapLookup {
     }
 
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         return MAIN_SINGLETON.getMap().get(key);
     }
 
     @Override
-    public String lookup(final String key) {
+    public String lookup(final Configuration config, final String key) {
         return MAIN_SINGLETON.getMap().get(key);
     }
 

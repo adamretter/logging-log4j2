@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.util.PluginManager;
 import org.apache.logging.log4j.core.config.plugins.util.PluginType;
 import org.apache.logging.log4j.core.util.Loader;
@@ -140,7 +141,7 @@ public class Interpolator extends AbstractLookup {
      * resolved
      */
     @Override
-    public String lookup(final LogEvent event, String var) {
+    public String lookup(final Configuration config, final LogEvent event, String var) {
         if (var == null) {
             return null;
         }
@@ -152,7 +153,7 @@ public class Interpolator extends AbstractLookup {
             final StrLookup lookup = lookups.get(prefix);
             String value = null;
             if (lookup != null) {
-                value = event == null ? lookup.lookup(name) : lookup.lookup(event, name);
+                value = event == null ? lookup.lookup(config, name) : lookup.lookup(config, event, name);
             }
 
             if (value != null) {
@@ -161,7 +162,7 @@ public class Interpolator extends AbstractLookup {
             var = var.substring(prefixPos + 1);
         }
         if (defaultLookup != null) {
-            return event == null ? defaultLookup.lookup(var) : defaultLookup.lookup(event, var);
+            return event == null ? defaultLookup.lookup(config, var) : defaultLookup.lookup(config, event, var);
         }
         return null;
     }

@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.ThreadContext.ContextStack;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.impl.ThrowableProxy;
@@ -218,8 +219,8 @@ public class RingBufferLogEvent implements LogEvent {
      * @param properties configured properties
      * @param strSubstitutor used to lookup values of variables in properties
      */
-    public void mergePropertiesIntoContextMap(final Map<Property, Boolean> properties,
-            final StrSubstitutor strSubstitutor) {
+    public void mergePropertiesIntoContextMap(final Configuration config, final Map<Property, Boolean> properties,
+                                              final StrSubstitutor strSubstitutor) {
         if (properties == null) {
             return; // nothing to do
         }
@@ -232,7 +233,7 @@ public class RingBufferLogEvent implements LogEvent {
             if (map.containsKey(prop.getName())) {
                 continue; // contextMap overrides config properties
             }
-            final String value = entry.getValue().booleanValue() ? strSubstitutor.replace(prop.getValue()) : prop
+            final String value = entry.getValue().booleanValue() ? strSubstitutor.replace(config, prop.getValue()) : prop
                     .getValue();
             map.put(prop.getName(), value);
         }
