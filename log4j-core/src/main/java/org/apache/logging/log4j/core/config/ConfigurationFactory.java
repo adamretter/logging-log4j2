@@ -389,7 +389,7 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
         public Configuration getConfiguration(final String name, final URI configLocation) {
 
             if (configLocation == null) {
-                final String configLocationStr = this.substitutor.replace(PropertiesUtil.getProperties()
+                final String configLocationStr = this.substitutor.replace(null, PropertiesUtil.getProperties()
                         .getStringProperty(CONFIGURATION_FILE_PROPERTY));
                 if (configLocationStr != null) {
                     ConfigurationSource source = null;

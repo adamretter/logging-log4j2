@@ -103,7 +103,7 @@ public abstract class AbstractPathAction extends AbstractAction {
      * @return the base path (all lookups resolved)
      */
     public Path getBasePath() {
-        return Paths.get(subst.replace(getBasePathString()));
+        return Paths.get(subst.replace(null, getBasePathString()));
     }
 
     /**

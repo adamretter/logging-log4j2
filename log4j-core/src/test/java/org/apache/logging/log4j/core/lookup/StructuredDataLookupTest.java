@@ -38,9 +38,9 @@ public class StructuredDataLookupTest {
         final Message msg = new StructuredDataMessage("Test", "This is a test", "Audit");
         final LogEvent event = Log4jLogEvent.newBuilder().setLevel(Level.DEBUG).setMessage(msg).build();
         final StrLookup lookup = new StructuredDataLookup();
-        String value = lookup.lookup(event, TESTKEY);
+        String value = lookup.lookup(null, event, TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("BadKey");
+        value = lookup.lookup(null, "BadKey");
         assertNull(value);
     }
 }

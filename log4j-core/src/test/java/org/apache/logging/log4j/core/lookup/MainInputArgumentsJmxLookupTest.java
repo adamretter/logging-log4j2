@@ -36,15 +36,15 @@ public class MainInputArgumentsJmxLookupTest {
     @Test
     public void testMap() {
         final JmxRuntimeInputArgumentsLookup lookup = JmxRuntimeInputArgumentsLookup.JMX_SINGLETON;
-        assertEquals(null, lookup.lookup(null));
-        assertEquals(null, lookup.lookup("X"));
-        assertEquals(null, lookup.lookup("foo.txt"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals(null, lookup.lookup(null, "X"));
+        assertEquals(null, lookup.lookup(null, "foo.txt"));
     }
 
     public void callFromMain() {
         final JmxRuntimeInputArgumentsLookup lookup = JmxRuntimeInputArgumentsLookup.JMX_SINGLETON;
-        assertEquals(null, lookup.lookup(null));
-        assertEquals(null, lookup.lookup("X"));
+        assertEquals(null, lookup.lookup(null, null));
+        assertEquals(null, lookup.lookup(null, "X"));
         // Eclipse adds -Dfile.encoding=Cp1252
         // assertEquals("--file", lookup.lookup("0"));
         // assertEquals("foo.txt", lookup.lookup("1"));

@@ -17,6 +17,7 @@
 package org.apache.logging.log4j.core.lookup;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 
 /**
  * Lookup a String key to a String value.
@@ -66,10 +67,11 @@ public interface StrLookup {
      * map.put("number", new Integer(2));
      * assertEquals("2", StrLookup.mapLookup(map).lookup("number"));
      * </pre>
+     * @param config The Configuration for which the lookup is being attempted
      * @param key  the key to be looked up, may be null
      * @return the matching value, null if no match
      */
-    String lookup(String key);
+    String lookup(Configuration config, String key);
 
     /**
      * Looks up a String key to a String value possibly using the current LogEvent.
@@ -94,9 +96,10 @@ public interface StrLookup {
      * map.put("number", new Integer(2));
      * assertEquals("2", StrLookup.mapLookup(map).lookup("number"));
      * </pre>
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent.
      * @param key  the key to be looked up, may be null
      * @return the matching value, null if no match
      */
-    String lookup(LogEvent event, String key);
+    String lookup(Configuration config, LogEvent event, String key);
 }

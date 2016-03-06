@@ -55,7 +55,7 @@ public final class LiteralPatternConverter extends LogEventPatternConverter impl
      */
     @Override
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
-        toAppendTo.append(substitute ? config.getStrSubstitutor().replace(event, literal) : literal);
+        toAppendTo.append(substitute ? config.getStrSubstitutor().replace(config, event, literal) : literal);
     }
     
     /**
@@ -63,7 +63,7 @@ public final class LiteralPatternConverter extends LogEventPatternConverter impl
      */
     @Override
     public void format(final Object obj, final StringBuilder output) {
-        output.append(substitute ? config.getStrSubstitutor().replace(literal) : literal);
+        output.append(substitute ? config.getStrSubstitutor().replace(config, literal) : literal);
     }
 
     /**
@@ -71,7 +71,7 @@ public final class LiteralPatternConverter extends LogEventPatternConverter impl
      */
     @Override
     public void format(final StringBuilder output, final Object... objects) {
-        output.append(substitute ? config.getStrSubstitutor().replace(literal) : literal);
+        output.append(substitute ? config.getStrSubstitutor().replace(config, literal) : literal);
     }
 
     public String getLiteral() {

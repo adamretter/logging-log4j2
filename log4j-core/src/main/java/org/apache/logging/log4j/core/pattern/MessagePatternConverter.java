@@ -70,7 +70,7 @@ public final class MessagePatternConverter extends LogEventPatternConverter {
                     if (toAppendTo.charAt(i) == '$' && toAppendTo.charAt(i + 1) == '{') {
                         final String value = toAppendTo.substring(offset, toAppendTo.length());
                         toAppendTo.setLength(offset);
-                        toAppendTo.append(config.getStrSubstitutor().replace(event, value));
+                        toAppendTo.append(config.getStrSubstitutor().replace(config, event, value));
                     }
                 }
             }
@@ -85,7 +85,7 @@ public final class MessagePatternConverter extends LogEventPatternConverter {
             }
             if (result != null) {
                 toAppendTo.append(config != null && result.contains("${") ?
-                        config.getStrSubstitutor().replace(event, result) : result);
+                        config.getStrSubstitutor().replace(config, event, result) : result);
             } else {
                 toAppendTo.append("null");
             }

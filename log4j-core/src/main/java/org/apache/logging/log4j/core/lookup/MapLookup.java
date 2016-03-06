@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.message.MapMessage;
 
@@ -117,7 +118,7 @@ public class MapLookup implements StrLookup {
     }
 
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         final boolean isMapMessage = event != null && event.getMessage() instanceof MapMessage;
         if (map == null && !isMapMessage) {
             return null;
@@ -140,12 +141,14 @@ public class MapLookup implements StrLookup {
      * If the map is null, then null is returned. The map result object is converted to a string using toString().
      * </p>
      *
+     * @param config
+     *        the Configuration for which the lookup is being attempted
      * @param key
      *        the key to be looked up, may be null
      * @return the matching value, null if no match
      */
     @Override
-    public String lookup(final String key) {
+    public String lookup(final Configuration config, final String key) {
         if (map == null) {
             return null;
         }

@@ -52,16 +52,16 @@ public class WebLookupTest {
             assertNotNull("No Configuration", config);
             final StrSubstitutor substitutor = config.getStrSubstitutor();
             assertNotNull("No Interpolator", substitutor);
-            String value = substitutor.replace("${web:initParam.TestParam}");
+            String value = substitutor.replace(null, "${web:initParam.TestParam}");
             assertNotNull("No value for TestParam", value);
             assertEquals("Incorrect value for TestParam: " + value, "ParamValue", value);
-            value = substitutor.replace("${web:attr.TestAttr}");
+            value = substitutor.replace(null, "${web:attr.TestAttr}");
             assertNotNull("No value for TestAttr", value);
             assertEquals("Incorrect value for TestAttr: " + value, "AttrValue", value);
-            value = substitutor.replace("${web:Name1}");
+            value = substitutor.replace(null, "${web:Name1}");
             assertNotNull("No value for Name1", value);
             assertEquals("Incorrect value for Name1: " + value, "Ben", value);
-            value = substitutor.replace("${web:Name2}");
+            value = substitutor.replace(null, "${web:Name2}");
             assertNotNull("No value for Name2", value);
             assertEquals("Incorrect value for Name2: " + value, "Jerry", value);
         } catch (final IllegalStateException e) {

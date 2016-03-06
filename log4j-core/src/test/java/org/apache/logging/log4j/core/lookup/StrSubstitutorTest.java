@@ -53,16 +53,16 @@ public class StrSubstitutorTest {
         final StrLookup lookup = new Interpolator(new MapLookup(map));
         final StrSubstitutor subst = new StrSubstitutor(lookup);
         ThreadContext.put(TESTKEY, TESTVAL);
-        String value = subst.replace("${TestKey}-${ctx:TestKey}-${sys:TestKey}");
+        String value = subst.replace(null, "${TestKey}-${ctx:TestKey}-${sys:TestKey}");
         assertEquals("TestValue-TestValue-TestValue", value);
-        value = subst.replace("${BadKey}");
+        value = subst.replace(null, "${BadKey}");
         assertEquals("${BadKey}", value);
 
-        value = subst.replace("${BadKey:-Unknown}-${ctx:BadKey:-Unknown}-${sys:BadKey:-Unknown}");
+        value = subst.replace(null, "${BadKey:-Unknown}-${ctx:BadKey:-Unknown}-${sys:BadKey:-Unknown}");
         assertEquals("Unknown-Unknown-Unknown", value);
-        value = subst.replace("${BadKey:-Unknown}-${ctx:BadKey}-${sys:BadKey:-Unknown}");
+        value = subst.replace(null, "${BadKey:-Unknown}-${ctx:BadKey}-${sys:BadKey:-Unknown}");
         assertEquals("Unknown-${ctx:BadKey}-Unknown", value);
-        value = subst.replace("${BadKey:-Unknown}-${ctx:BadKey:-}-${sys:BadKey:-Unknown}");
+        value = subst.replace(null, "${BadKey:-Unknown}-${ctx:BadKey:-}-${sys:BadKey:-Unknown}");
         assertEquals("Unknown--Unknown", value);
     }
 }

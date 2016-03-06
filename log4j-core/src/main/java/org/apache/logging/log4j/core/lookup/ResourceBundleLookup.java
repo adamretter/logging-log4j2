@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.status.StatusLogger;
 
@@ -40,6 +41,8 @@ public class ResourceBundleLookup extends AbstractLookup {
      *
      * For example: "com.domain.messages:MyKey".
      *
+     * @param config
+     *        The Configuration for which the lookup is being attempted
      * @param event
      *            The current LogEvent.
      * @param key
@@ -47,7 +50,7 @@ public class ResourceBundleLookup extends AbstractLookup {
      * @return The value associated with the key.
      */
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         if (key == null) {
             return null;
         }

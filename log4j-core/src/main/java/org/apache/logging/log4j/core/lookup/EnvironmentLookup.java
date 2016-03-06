@@ -17,6 +17,7 @@
 package org.apache.logging.log4j.core.lookup;
 
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 
 /**
@@ -27,12 +28,13 @@ public class EnvironmentLookup extends AbstractLookup {
 
     /**
      * Looks up the value of the environment variable.
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent (is ignored by this StrLookup).
      * @param key  the key to be looked up, may be null
      * @return The value of the environment variable.
      */
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         return System.getenv(key);
     }
 }

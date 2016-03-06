@@ -72,7 +72,7 @@ public final class NoGcMessagePatternConverter extends LogEventPatternConverter 
             }
             if (result != null) {
                 toAppendTo.append(config != null && result.contains("${") ?
-                        config.getStrSubstitutor().replace(event, result) : result);
+                        config.getStrSubstitutor().replace(config, event, result) : result);
             } else {
                 toAppendTo.append("null");
             }

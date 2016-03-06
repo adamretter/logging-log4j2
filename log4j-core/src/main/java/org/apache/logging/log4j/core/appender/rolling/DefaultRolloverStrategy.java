@@ -293,8 +293,8 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
         final StringBuilder buf = new StringBuilder();
 
         // LOG4J2-531: directory scan & rollover must use same format
-        manager.getPatternProcessor().formatFileName(subst, buf, highIndex);
-        String highFilename = subst.replace(buf);
+        manager.getPatternProcessor().formatFileName(null, subst, buf, highIndex);
+        String highFilename = subst.replace(null, buf);
         final int suffixLength = suffixLength(highFilename);
         int maxIndex = 0;
 
@@ -344,9 +344,9 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
                 // add a rename action to the list
                 buf.setLength(0);
                 // LOG4J2-531: directory scan & rollover must use same format
-                manager.getPatternProcessor().formatFileName(subst, buf, i - 1);
+                manager.getPatternProcessor().formatFileName(null, subst, buf, i - 1);
 
-                final String lowFilename = subst.replace(buf);
+                final String lowFilename = subst.replace(null, buf);
                 String renameTo = lowFilename;
 
                 if (isBase) {
@@ -358,9 +358,9 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
             } else {
                 buf.setLength(0);
                 // LOG4J2-531: directory scan & rollover must use same format
-                manager.getPatternProcessor().formatFileName(subst, buf, i - 1);
+                manager.getPatternProcessor().formatFileName(null, subst, buf, i - 1);
 
-                highFilename = subst.replace(buf);
+                highFilename = subst.replace(null, buf);
             }
         }
         if (maxIndex == 0) {
@@ -400,9 +400,9 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
         final StringBuilder buf = new StringBuilder();
 
         // LOG4J2-531: directory scan & rollover must use same format
-        manager.getPatternProcessor().formatFileName(subst, buf, lowIndex);
+        manager.getPatternProcessor().formatFileName(null, subst, buf, lowIndex);
 
-        String lowFilename = subst.replace(buf);
+        String lowFilename = subst.replace(null, buf);
         final int suffixLength = suffixLength(lowFilename);
 
         for (int i = lowIndex; i <= highIndex; i++) {
@@ -445,9 +445,9 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
                 // add a rename action to the list
                 buf.setLength(0);
                 // LOG4J2-531: directory scan & rollover must use same format
-                manager.getPatternProcessor().formatFileName(subst, buf, i + 1);
+                manager.getPatternProcessor().formatFileName(null, subst, buf, i + 1);
 
-                final String highFilename = subst.replace(buf);
+                final String highFilename = subst.replace(null, buf);
                 String renameTo = highFilename;
 
                 if (isBase) {
@@ -512,7 +512,7 @@ public class DefaultRolloverStrategy implements RolloverStrategy {
             LOGGER.trace("DefaultRolloverStrategy.purge() took {} milliseconds", durationMillis);
         }
         final StringBuilder buf = new StringBuilder(255);
-        manager.getPatternProcessor().formatFileName(subst, buf, fileIndex);
+        manager.getPatternProcessor().formatFileName(null, subst, buf, fileIndex);
         final String currentFileName = manager.getFileName();
 
         String renameTo = buf.toString();

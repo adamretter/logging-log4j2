@@ -18,6 +18,7 @@ package org.apache.logging.log4j.core.lookup;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 
 /**
@@ -28,22 +29,24 @@ public class ContextMapLookup implements StrLookup {
 
     /**
      * Looks up the value from the ThreadContext Map.
+     * @para config The Configuration for which the lookup is being attempted
      * @param key  the key to be looked up, may be null
      * @return The value associated with the key.
      */
     @Override
-    public String lookup(final String key) {
+    public String lookup(final Configuration config, final String key) {
         return ThreadContext.get(key);
     }
 
     /**
      * Looks up the value from the ThreadContext Map.
+     * @param config The Configuration for which the lookup is being attempted
      * @param event The current LogEvent.
      * @param key  the key to be looked up, may be null
      * @return The value associated with the key.
      */
     @Override
-    public String lookup(final LogEvent event, final String key) {
+    public String lookup(final Configuration config, final LogEvent event, final String key) {
         return event.getContextMap().get(key);
     }
 }

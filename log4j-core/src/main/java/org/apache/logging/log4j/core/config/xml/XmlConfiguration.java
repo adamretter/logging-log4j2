@@ -112,7 +112,7 @@ public class XmlConfiguration extends AbstractConfiguration implements Reconfigu
                     .withStatus(getDefaultStatus());
             for (final Map.Entry<String, String> entry : attrs.entrySet()) {
                 final String key = entry.getKey();
-                final String value = getStrSubstitutor().replace(entry.getValue());
+                final String value = getStrSubstitutor().replace(this, entry.getValue());
                 if ("status".equalsIgnoreCase(key)) {
                     statusConfig.withStatus(value);
                 } else if ("dest".equalsIgnoreCase(key)) {

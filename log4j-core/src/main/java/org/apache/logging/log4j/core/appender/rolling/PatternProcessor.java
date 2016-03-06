@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.apache.logging.log4j.core.pattern.ArrayPatternConverter;
@@ -206,13 +207,13 @@ public class PatternProcessor {
      * @param buf string buffer to which formatted file name is appended, may not be null.
      * @param obj object to be evaluated in formatting, may not be null.
      */
-    public final void formatFileName(final StrSubstitutor subst, final StringBuilder buf, final Object obj) {
+    public final void formatFileName(final Configuration config, final StrSubstitutor subst, final StringBuilder buf, final Object obj) {
         // LOG4J2-628: we deliberately use System time, not the log4j.Clock time
         // for creating the file name of rolled-over files. 
         final long time = prevFileTime == 0 ? System.currentTimeMillis() : prevFileTime;
         formatFileName(buf, new Date(time), obj);
         final LogEvent event = new Log4jLogEvent.Builder().setTimeMillis(time).build();
-        final String fileName = subst.replace(event, buf);
+        final String fileName = subst.replace(config, event, buf);
         buf.setLength(0);
         buf.append(fileName);
     }

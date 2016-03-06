@@ -338,7 +338,7 @@ public class LoggerConfig extends AbstractFilterable {
                 .build();
             for (final Map.Entry<Property, Boolean> entry : properties.entrySet()) {
                 final Property prop = entry.getKey();
-                final String value = entry.getValue() ? config.getStrSubstitutor().replace(event, prop.getValue())
+                final String value = entry.getValue() ? config.getStrSubstitutor().replace(config, event, prop.getValue())
                         : prop.getValue();
                 props.add(Property.createProperty(prop.getName(), value));
             }

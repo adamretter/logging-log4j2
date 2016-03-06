@@ -27,25 +27,25 @@ public class ResourceBundleLookupTest {
     @Test
     public void testLookup() {
         final StrLookup lookup = new ResourceBundleLookup();
-        final String value = lookup.lookup("org.apache.logging.log4j.core.lookup.resource-bundle_en:KeyA");
-        Assert.assertEquals("ValueA", lookup.lookup("org.apache.logging.log4j.core.lookup.resource-bundle:KeyA"));
+        final String value = lookup.lookup(null, "org.apache.logging.log4j.core.lookup.resource-bundle_en:KeyA");
+        Assert.assertEquals("ValueA", lookup.lookup(null, "org.apache.logging.log4j.core.lookup.resource-bundle:KeyA"));
     }
 
     @Test
     public void testLookupWithLocale() {
         final StrLookup lookup = new ResourceBundleLookup();
-        final String value = lookup.lookup("org.apache.logging.log4j.core.lookup.resource-bundle:KeyA");
-        Assert.assertEquals("ValueA", lookup.lookup("org.apache.logging.log4j.core.lookup.resource-bundle:KeyA"));
+        final String value = lookup.lookup(null, "org.apache.logging.log4j.core.lookup.resource-bundle:KeyA");
+        Assert.assertEquals("ValueA", lookup.lookup(null, "org.apache.logging.log4j.core.lookup.resource-bundle:KeyA"));
     }
 
     public void testMissingKey() {
         final StrLookup lookup = new ResourceBundleLookup();
-        Assert.assertNull(lookup.lookup("org.apache.logging.log4j.core.lookup.resource-bundle:KeyUnkown"));
+        Assert.assertNull(lookup.lookup(null, "org.apache.logging.log4j.core.lookup.resource-bundle:KeyUnkown"));
     }
 
     @Test
     public void testBadFormatBundleOnly() {
         final StrLookup lookup = new ResourceBundleLookup();
-        Assert.assertNull(lookup.lookup("X"));
+        Assert.assertNull(lookup.lookup(null, "X"));
     }
 }

@@ -72,23 +72,23 @@ public class InterpolatorTest {
         map.put(TESTKEY, TESTVAL);
         final StrLookup lookup = new Interpolator(new MapLookup(map));
         ThreadContext.put(TESTKEY, TESTVAL);
-        String value = lookup.lookup(TESTKEY);
+        String value = lookup.lookup(null, TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("ctx:" + TESTKEY);
+        value = lookup.lookup(null, "ctx:" + TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("sys:" + TESTKEY);
+        value = lookup.lookup(null, "sys:" + TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("BadKey");
+        value = lookup.lookup(null, "BadKey");
         assertNull(value);
         ThreadContext.clearMap();
-        value = lookup.lookup("ctx:" + TESTKEY);
+        value = lookup.lookup(null, "ctx:" + TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("jndi:" + TEST_CONTEXT_RESOURCE_NAME);
+        value = lookup.lookup(null, "jndi:" + TEST_CONTEXT_RESOURCE_NAME);
         assertEquals(TEST_CONTEXT_NAME, value);
     }
 
     private void assertLookupNotEmpty(final StrLookup lookup, final String key) {
-        final String value = lookup.lookup(key);
+        final String value = lookup.lookup(null, key);
         assertNotNull(value);
         assertFalse(value.isEmpty());
         System.out.println(key + " = " + value);
@@ -97,13 +97,13 @@ public class InterpolatorTest {
     @Test
     public void testLookupWithDefaultInterpolator() {
         final StrLookup lookup = new Interpolator();
-        String value = lookup.lookup("sys:" + TESTKEY);
+        String value = lookup.lookup(null, "sys:" + TESTKEY);
         assertEquals(TESTVAL, value);
-        value = lookup.lookup("env:PATH");
+        value = lookup.lookup(null, "env:PATH");
         assertNotNull(value);
-        value = lookup.lookup("jndi:" + TEST_CONTEXT_RESOURCE_NAME);
+        value = lookup.lookup(null, "jndi:" + TEST_CONTEXT_RESOURCE_NAME);
         assertEquals(TEST_CONTEXT_NAME, value);
-        value = lookup.lookup("date:yyyy-MM-dd");
+        value = lookup.lookup(null, "date:yyyy-MM-dd");
         assertNotNull("No Date", value);
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         final String today = format.format(new Date());

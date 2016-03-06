@@ -34,7 +34,7 @@ public class DateLookupTest {
     public void testLookup() {
         final StrLookup lookup = new DateLookup();
         final LogEvent event = new MyLogEvent();
-        final String value = lookup.lookup(event, "MM/dd/yyyy");
+        final String value = lookup.lookup(null, event, "MM/dd/yyyy");
         assertNotNull(value);
         assertEquals("12/30/2011", value);
     }

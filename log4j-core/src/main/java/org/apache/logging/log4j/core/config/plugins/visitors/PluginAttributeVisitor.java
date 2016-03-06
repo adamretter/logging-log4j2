@@ -40,7 +40,7 @@ public class PluginAttributeVisitor extends AbstractPluginVisitor<PluginAttribut
         final String name = this.annotation.value();
         final Map<String, String> attributes = node.getAttributes();
         final String rawValue = removeAttributeValue(attributes, name, this.aliases);
-        final String replacedValue = this.substitutor.replace(event, rawValue);
+        final String replacedValue = this.substitutor.replace(configuration, event, rawValue);
         final Object defaultValue = findDefaultValue(event);
         final Object value = convert(replacedValue, defaultValue);
         final Object debugValue = this.annotation.sensitive() ? NameUtil.md5(value + this.getClass().getName()) : value;
@@ -76,6 +76,6 @@ public class PluginAttributeVisitor extends AbstractPluginVisitor<PluginAttribut
         if (this.conversionType == Class.class) {
             return this.annotation.defaultClass();
         }
-        return this.substitutor.replace(event, this.annotation.defaultString());
+        return this.substitutor.replace(null, event, this.annotation.defaultString());
     }
 }

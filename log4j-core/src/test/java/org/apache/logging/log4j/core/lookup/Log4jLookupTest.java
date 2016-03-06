@@ -43,27 +43,26 @@ public class Log4jLookupTest {
 
     private final static File EXPECT = new File(System.getProperty("user.home"), "/a/b/c/d/e/log4j2.xml");
     private LoggerContext mockCtx = null;
+    private Configuration config = null;
+    private ConfigurationSource configSrc = null;
 
     @Before
     public void setup() throws URISyntaxException {
         this.mockCtx = EasyMock.createMock(LoggerContext.class);
         ContextAnchor.THREAD_CONTEXT.set(mockCtx);
 
-        final Configuration config = EasyMock.createMock(Configuration.class);
-        expect(mockCtx.getConfiguration()).andReturn(config);
+        this.config = EasyMock.createMock(Configuration.class);
         
-        final ConfigurationSource configSrc = EasyMock.createMock(ConfigurationSource.class);
+        this.configSrc = EasyMock.createMock(ConfigurationSource.class);
         expect(config.getConfigurationSource()).andReturn(configSrc);
         expect(configSrc.getFile()).andReturn(EXPECT);
 
-        replay(mockCtx);
-        replay(config);
-        replay(configSrc);
+        replay(mockCtx, config, configSrc);
     }
 
     @After
     public void cleanup() {
-        verify(mockCtx);
+        verify(mockCtx, config, configSrc);
 
         ContextAnchor.THREAD_CONTEXT.set(null);
         this.mockCtx = null;
@@ -72,14 +71,14 @@ public class Log4jLookupTest {
     @Test
     public void lookupConfigLocation() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_LOCATION);
+        final String value = log4jLookup.lookup(config, KEY_CONFIG_LOCATION);
         assertEquals(EXPECT.getAbsolutePath(), value);
     }
 
     @Test
     public void lookupConfigParentLocation() {
         final StrLookup log4jLookup = new Log4jLookup();
-        final String value = log4jLookup.lookup(KEY_CONFIG_PARENT_LOCATION);
+        final String value = log4jLookup.lookup(config, KEY_CONFIG_PARENT_LOCATION);
         assertEquals(EXPECT.getParentFile().getAbsolutePath(), value);
     }
 }

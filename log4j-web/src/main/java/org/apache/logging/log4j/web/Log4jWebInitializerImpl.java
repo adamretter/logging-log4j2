@@ -96,8 +96,8 @@ final class Log4jWebInitializerImpl extends AbstractLifeCycle implements Log4jWe
         if (this.isInitialized()) {
             super.setStarting();
 
-            this.name = this.substitutor.replace(this.servletContext.getInitParameter(LOG4J_CONTEXT_NAME));
-            final String location = this.substitutor.replace(this.servletContext
+            this.name = this.substitutor.replace(null, this.servletContext.getInitParameter(LOG4J_CONTEXT_NAME));
+            final String location = this.substitutor.replace(null, this.servletContext
                     .getInitParameter(LOG4J_CONFIG_LOCATION));
             final boolean isJndi = "true".equalsIgnoreCase(this.servletContext
                     .getInitParameter(IS_LOG4J_CONTEXT_SELECTOR_NAMED));
